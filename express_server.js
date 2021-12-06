@@ -30,6 +30,11 @@ app.get("/set", (req, res) => {
   res.send(`a = ${a}`);        // error: a is not defined
  });
 
+ app.get("/urls", (req, res) => {
+   const templateVars = { urls: urlDatabase};
+   res.render("urls_index", templateVars);
+ });  // When sending variables to an EJS template, we need to send them inside an object, even if we are only sending one variable. This is so we can use the key of that variable (in the above case the key is urls) to access the data within our template.
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);    // first server create 
 });
