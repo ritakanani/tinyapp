@@ -12,8 +12,21 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
+  res.json(urlDatabase);      // output urlDatabse object in JSON string
 });
+
+app.get("/hello", (req, res) => {
+  res.send("<html><body>Hello <b>World</b></body></html>\n");  // output In html page, "Hello (bold)World" inside body
+});
+
+app.get("/set", (req, res) => {
+  const a = 1;          
+  res.send(`a = ${a}`);           // output a = 1
+ });
+ 
+ app.get("/fetch", (req, res) => {
+  res.send(`a = ${a}`);        // error: a is not defined
+ });
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
