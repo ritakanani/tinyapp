@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 
+// set the view engine to ejs
 app.set("view engine", "ejs");
 
 const urlDatabase = {
@@ -30,11 +31,13 @@ app.get("/set", (req, res) => {
   res.send(`a = ${a}`);        // error: a is not defined
  });
 
+ // index page
  app.get("/urls", (req, res) => {
    const templateVars = { urls: urlDatabase};
    res.render("urls_index", templateVars);
  });  // When sending variables to an EJS template, we need to send them inside an object, even if we are only sending one variable. This is so we can use the key of that variable (in the above case the key is urls) to access the data within our template.
 
+ // show shortURL and longURL page
  app.get("/urls/:shortURL", (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: req.params.longURL };
   res.render("urls_show", templateVars);
