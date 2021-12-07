@@ -17,6 +17,16 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+function generateRandomString() {
+  const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let result = "";
+
+  for (let i = 6; i > 0; --i) {
+  result += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return result;
+}
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -51,7 +61,12 @@ app.get("/set", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  // res.send("Ok");
+  // Respond with 'Ok' (we will replace this)
+  let longURL = req.body.longURL;
+  let shortURL = generateRandomString();
+  urlDatabase[shortURL] = longURL;
+  res.redirect(`/urls/${shortURL}`);
 });
 
  // show shortURL and longURL page
@@ -63,6 +78,12 @@ app.post("/urls", (req, res) => {
 // urlDatabase is requesting the value of req.params.shortURL(b2xVn2) = longURL. 
 
 
+app.get("/u/:shortURL", (req, res) => {
+  const longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
+});
+
+
 
 
 app.listen(PORT, () => {
@@ -70,3 +91,11 @@ app.listen(PORT, () => {
 });
 
 // The order of route definitions matters! The GET /urls/new route needs to be defined before the GET /urls/:id route. Routes defined earlier will take precedence, so if we place this route after the /urls/:id definition, any calls to /urls/new will be handled by app.get("/urls/:id", ...) because Express will think that new is a route parameter. A good rule of thumb to follow is that routes should be ordered from most specific to least specific.
+
+// Let's have a look at how this functionality fits in with the overall flow of our app:
+
+// 1. After we generate our new shortURL, we add it to our database.
+// 2.Our server then responds with a redirect to /urls/:shortURL.
+// 3.Our browser then makes a GET request to /urls/:shortURL.
+// 4.Our server looks up the longURL from the database, sends the shortURL and longURL to the urls_show template, generates the HTML, and then sends this HTML back to the browser.
+// 5.The browser then renders this HTML.
