@@ -19,6 +19,19 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+};
+
 function generateRandomString() {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let result = "";
@@ -27,6 +40,16 @@ function generateRandomString() {
   result += chars[Math.floor(Math.random() * chars.length)];
   }
   return result;
+}
+
+const findUserByEmail = (email) => {
+  for(const user_Id in users) {             // user_Id is key of users
+    const user = users[user_Id];           // value of user_Id declare with another var
+    if(user.email === email) {              
+      return user;
+    }
+  }
+  return null;
 }
 
 // app.get("/", (req, res) => {
@@ -62,8 +85,7 @@ function generateRandomString() {
  // get route to show the Form
  app.get("/urls/new", (req, res) => {
   const templateVars = {
-    username: req.cookies["username"],
-    // ... any other vars
+    username: req.cookies["username"],    
   };
   console.log(templateVars);
   res.render("urls_new", templateVars);
@@ -74,7 +96,7 @@ function generateRandomString() {
 
 app.post("/login", (req, res) => {
   console.log("username", req.body);  // from body username box, longURL is username 
-  res.cookie("username", req.body.longURL);
+  res.cookie("username", req.body.longURL);   // set the cookie for username
   
   res.redirect("/urls");
 });
@@ -87,6 +109,24 @@ app.post("/logout", (req, res) => {
     res.redirect("/urls");
 });
 
+// // REGISTER // //
+
+app.post("/register", (req, res) => {
+  console.log("req.body", req.body);
+  const user_id = generateRandomString();
+  users[user_id] = { id: user_id, email: req.body.email, password: req.body.password };
+
+  if(!users[user_id].email || !users[user_id].password) {
+    return res.status(400).send("require valid email and password");
+  }
+  
+  const user = findUserByEmail(users[user_id].email);
+  if (user) { 
+    return res.status(400).send("this emial ID is already exit");
+  }
+
+  res.redirect("/urls"); 
+});
 
 // //      EDIT   // //
 
@@ -97,6 +137,13 @@ app.post("/urls/:shortURL", (req, res) => {
   res.redirect("/urls");
 });
 
+//  //  DELETE  //  //
+
+app.post("/urls/:shortURL/delete", (req, res) => { 
+  let shortURL = req.params.shortURL;  
+  delete urlDatabase[shortURL];  
+  res.redirect("/urls");  
+});
 
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
@@ -124,13 +171,22 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
-//  //  DELETE  //  //
+// // LOG IN  // //
 
-app.post("/urls/:shortURL/delete", (req, res) => { 
-  let shortURL = req.params.shortURL;  
-  delete urlDatabase[shortURL];  
-  res.redirect("/urls");  
+app.get("/login", (req, res) => {
+  const templateVars = { username: req.cookies["username"] };
+
+  res.render("register", templateVars);
 });
+
+// // REGISTER  // //
+
+app.get("/register", (req, res) => {
+  const templateVars = { username: req.cookies["username"] };
+
+  res.render("register", templateVars);
+});
+
 
 
 
