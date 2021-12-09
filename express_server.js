@@ -42,15 +42,6 @@ function generateRandomString() {
   return result;
 }
 
-// const findUserByEmail = (email) => {
-//   for(const user_Id in users) {             // user_Id is key of users
-//     const user = users[user_Id];           // value of user_Id declare with another var
-//     if(user.email === email) {              
-//       return user;
-//     }
-//   }
-//   return null;
-// }
 
 // app.get("/", (req, res) => {
 //   res.send("Hello!");
