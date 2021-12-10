@@ -26,17 +26,17 @@
       <tbody>
         <% for(let url in urls) { %>
           <tr>
-            <td><%= urls[url]?.shortURL %></td>         <!-- url represents key of each loop value -->
-            <td><%= urls[url]?.longURL %></td>   <!-- urls[url] represents value of key -->
+            <td><%= url %></td>         <!-- url represents key of each loop value -->
+            <td><%= urls[url] %></td>   <!-- urls[url] represents value of key -->
             <td>
-              <form class="form-inline" action="/urls/<%= urls[url]?.shortURL %>" method="GET">
+              <form class="form-inline" action="/urls/<%= url %>" method="GET">
                 <div class="form-group mb-2">               
                   <button type="submit" class="btn btn-primary">Edit</button>
                 </div>
               </form>
             </td>
             <td>
-              <form class="form-inline" action="/urls/<%= urls[url]?.shortURL %>/delete" method="POST">
+              <form class="form-inline" action="/urls/<%= url %>/delete" method="POST">
                 <div class="form-group mb-2">               
                   <button type="submit" class="btn btn-primary">Delete</button>
                 </div>
