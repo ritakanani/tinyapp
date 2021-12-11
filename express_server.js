@@ -1,3 +1,4 @@
+const findUserIdByEmail = require("./helpers.js");
 const PORT = 8080; // default port 8080
 const express = require("express");
 const app = express();
@@ -84,15 +85,7 @@ function generateRandomString() {
 
 
 // // index page  // //
-function findUserIdByEmail(email) {
-  for (let user in users) {
-    if (users[user].email === email) {
-      return users[user]
-    }
-  }
-  return null;
-  
-}
+
 
 function urlsForUser(id) {
   const urls = {};
@@ -145,7 +138,7 @@ app.post("/login", (req, res) => {
   // console.log("username", req.body);  // from body username box, longURL is username 
   const password = req.body.password;
   
-  const user = findUserIdByEmail(req.body.email);
+  const user = findUserIdByEmail(req.body.email, users);
   if (!user) {
     res.status(403).send('You are not allowed for this action')
   } 
@@ -272,6 +265,8 @@ app.get("/u/:id", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);    // first server create 
 });
+
+
 
 // The order of route definitions matters! The GET /urls/new route needs to be defined before the GET /urls/:id route. Routes defined earlier will take precedence, so if we place this route after the /urls/:id definition, any calls to /urls/new will be handled by app.get("/urls/:id", ...) because Express will think that new is a route parameter. A good rule of thumb to follow is that routes should be ordered from most specific to least specific.
 
