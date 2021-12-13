@@ -18,7 +18,6 @@ const testUsers = {
 describe('getUserByEmail', function() {
   it('should return a user with valid email', function() {
     const user = findUserIdByEmail("user@example.com", testUsers)
-    console.log("user", user);
     const expectedUserID = testUsers["userRandomID"];
     assert.strictEqual(user, expectedUserID);
   });
