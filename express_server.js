@@ -1,4 +1,4 @@
-const findUserIdByEmail = require("./helpers.js");
+const { findUserIdByEmail } = require("./helpers.js");
 const PORT = 8080; // default port 8080
 const express = require("express");
 const app = express();
@@ -176,7 +176,7 @@ app.post("/register", (req, res) => {
   const password = req.body.password;
 
   if (!email || !password) {
-    return res.status(400).send("require valid email and password");
+    return res.status(400).send("Require valid email and password");
   }
 
   for (let user of Object.values(users)) {
@@ -196,10 +196,6 @@ app.post("/register", (req, res) => {
 // // REGISTER  // //
 
 app.get("/register", (req, res) => {
-  // const templateVars = {
-  //   email: req.session.user_id,
-  //   user: req.session["user_id"] ? JSON.parse(req.session["user_id"]) : ''
-  // };
 
   const templateVars = {
     user: null
